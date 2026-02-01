@@ -39,7 +39,7 @@
         <dependency>
             <groupId>io.github.thierrysquirrel</groupId>
             <artifactId>container</artifactId>
-            <version>1.0.0.0-RELEASE</version>
+            <version>1.0.0.1-RELEASE</version>
         </dependency>
 ```
 # 加载Java.ClassLoading文件:

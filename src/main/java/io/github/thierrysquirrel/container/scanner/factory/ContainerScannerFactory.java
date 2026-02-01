@@ -65,6 +65,17 @@ public class ContainerScannerFactory {
 
         String fileName = packageName.replace(ContainerScannerFactoryConstant.DOT, ContainerScannerFactoryConstant.SLASH);
         String resourceUrl = ClassLoader.getSystemClassLoader().getResource(fileName).getFile();
+
+        int indexOfJar = resourceUrl.indexOf(ContainerScannerFactoryConstant.JAR);
+        if (indexOfJar != -1) {
+            int beginIndex = ContainerScannerFactoryConstant.MAVEN_FILE.length();
+            int endIndex = indexOfJar + ContainerScannerFactoryConstant.JAR.length();
+            String jarUrl = resourceUrl.substring(beginIndex, endIndex);
+
+            String packagePath = packageName.replace(ContainerScannerFactoryConstant.DOT, ContainerScannerFactoryConstant.SLASH);
+            return scannerJar(packagePath, jarUrl);
+        }
+
         File file = new File(resourceUrl);
 
         Stream<Path> walkStream = createWalkStream(file.toPath());
@@ -78,9 +89,26 @@ public class ContainerScannerFactory {
         URL location = codeSource.getLocation();
 
         String path = location.getPath();
-        List<Class<?>> classeList = new ArrayList<>();
-
         String packagePath = packageName.replace(ContainerScannerFactoryConstant.DOT, ContainerScannerFactoryConstant.SLASH);
+        return scannerJar(packagePath, path);
+    }
+
+    public static boolean scannerIsJar(Class<?> applicationClass) {
+
+        ProtectionDomain protectionDomain = applicationClass.getProtectionDomain();
+        CodeSource codeSource = protectionDomain.getCodeSource();
+        URL location = codeSource.getLocation();
+
+        String path = location.getPath();
+        if (path.endsWith(ContainerScannerFactoryConstant.JAR)) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+
+    }
+
+    private static List<Class<?>> scannerJar(String packagePath, String path) {
+        List<Class<?>> classeList = new ArrayList<>();
         URL pathUrl = fileToUrl(new File(path));
 
         try (JarFile jarFile = new JarFile(path);
@@ -106,20 +134,6 @@ public class ContainerScannerFactory {
         }
 
         return classeList;
-    }
-
-    public static boolean scannerIsJar(Class<?> applicationClass) {
-
-        ProtectionDomain protectionDomain = applicationClass.getProtectionDomain();
-        CodeSource codeSource = protectionDomain.getCodeSource();
-        URL location = codeSource.getLocation();
-
-        String path = location.getPath();
-        if (path.endsWith(ContainerScannerFactoryConstant.JAR)) {
-            return Boolean.TRUE;
-        }
-        return Boolean.FALSE;
-
     }
 
 

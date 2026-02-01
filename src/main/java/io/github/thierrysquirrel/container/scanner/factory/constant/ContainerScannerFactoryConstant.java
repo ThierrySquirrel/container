@@ -40,4 +40,6 @@ public class ContainerScannerFactoryConstant {
 
     public static final String JAR = ".jar";
 
+    public static final String MAVEN_FILE = "file:";
+
 }

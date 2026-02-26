@@ -39,7 +39,7 @@ Customize initialization class (successfully registered class)
         <dependency>
             <groupId>io.github.thierrysquirrel</groupId>
             <artifactId>container</artifactId>
-            <version>1.0.0.1-RELEASE</version>
+            <version>1.0.0.2-RELEASE</version>
         </dependency>
 ```
 # Load Java.ClassLoading file:
